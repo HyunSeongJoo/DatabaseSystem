@@ -1,0 +1,256 @@
+품목별 상품명, 가격 출력
+
+Select P.Product_ID, P.Name, P.Price
+From Product as P
+Where Product_ID like '204%';
+
+Select P.Product_ID, P.Name, P.Price
+From Product as P
+Where Product_ID like '(Product_ID 앞 세자리)%';
+
+
+
+모든 개인 장바구니 출력
+Select C.User_ID, P.Name, P.Price, O.Number_Buy, C.All_Price
+From 상품 as P, 개인주문하다 as O, 장바구니 as C
+Where P.Product_ID = O.Product_ID and C.Cart_ID = O.Cart_ID;
+
+
+
+
+Select P.Name, P.Price, O.Number_Buy
+From 상품 as P, 개인주문하다 as O
+where P.Product_ID = O.Product_ID;
+
+
+
+Select Product_ID, Name, Price
+From 상품
+Where Product_ID I
+
+
+
+
+
+Select User_Name
+From 회원
+Where User_Addr like '서울%';
+
+
+select *
+from 회원;
+
+
+
+
+개인 장바구니 총가격
+Select sum(P.Price)
+From Product as P, Indi_Order as O, Cart as C
+Where P.Product_ID = O.Product_ID and C.Cart_ID = O.Cart_ID and C.Cart_ID = '%s(특정카트번호)';
+
+
+
+Select sum(P.Price)
+From Product as P, Indi_Order as O, Cart as C
+Where P.Product_ID = O.Product_ID and C.Cart_ID = O.Cart_ID and C.Cart_ID = 310001;
+
+
+INSERT INTO Cart (Cart_ID, All_Price, M.User_ID, One_More)
+Select C.Cart_ID, sum(P.Price), U.User_ID, '%s(공동구매카트여부)'
+From Product as P, Indi_Order as O, Cart as C, Member as M
+Where P.Product_ID = O.Product_ID and C.Cart_ID = O.Cart_ID and C.Cart_ID = '%s(특정카트번호)' and C.User_ID = M.User_ID
+
+INSERT INTO Cart (Cart_ID, All_Price, User_ID, One_More)
+Select C.Cart_ID, sum(P.Price), M.User_ID, 0
+From Product as P, Indi_Order as O, Cart as C, Member as M
+Where P.Product_ID = O.Product_ID and C.Cart_ID = O.Cart_ID and C.Cart_ID = 300003 and C.User_ID = M.User_ID;
+
+
+
+Select P.Name, P.Price
+From Product as P
+Where P.Product_ID IN (
+	Select Product_ID
+	From Indi_Order as O
+	Where O.Cart_ID = '310001');IN (
+			Select C.Cart_ID
+			From Cart as C
+			Where C.User_ID = 120002)); 
+
+
+
+Number_Buy , Product_ID , Cart_ID
+		200000	310001
+		200001	310001
+
+
+Update Cart
+Set Number_Buy 
+Where Product_ID = 
+
+
+
+Select *
+From Payment as Pay
+Where Pay.Cart_ID IN (	Select C.Cart_ID
+			From Cart as C
+			Where C.User_ID = '110021');
+
+Select *
+From Indi_Order as IO
+Where IO.Cart_ID IN  (	Select Pay.Cart_ID
+			From Payment as Pay, Member as M
+			Where Pay.Cart
+			
+
+Select C.User_ID, P.Name, P.Price, O.Number_Buy, C.All_Price
+From 상품 as P, 개인주문하다 as O, 장바구니 as C
+Where P.Product_ID = O.Product_ID and C.Cart_ID = O.Cart_ID;
+
+
+장바구니 보기
+Select P.Name, P.Price, IO.Number_Buy, P.Price * IO.Number_Buy
+From Indi_Order as IO, Product as P
+Where P.Product_ID = IO.Product_ID and 
+      IO.Cart_ID IN (Select C.Cart_ID
+                     From Cart as C 
+                     Where C.User_ID ='164432')
+Group by P.Name
+;
+
+Select P.Name, P.Price, IO.Number_Buy, P.Price * IO.Number_Buy as result
+From Indi_Order as IO, Product as P
+Where P.Product_ID = IO.Product_ID and 
+      IO.Cart_ID IN (Select C.Cart_ID
+                     From Cart as C 
+                     Where C.User_ID IN (Select SC.User_ID
+                                        From Subscribe as Sub, Member as SC
+                                        Where Sub.User_ID_Follow = C.User_ID and Sub.User_ID_Following = SC.User_ID
+                                        )
+                     )
+Group by P.Name
+;
+
+SELECT P.Name, P.Price, IO.Number_Buy, P.Price*IO.Number_Buy
+FROM Indi_Order as IO, Product as P 
+WHERE IO.Product_ID = P.Product_ID 
+      AND IO.Cart_ID IN(
+                        Select C.Cart_ID 
+                        From Cart as C
+                        Where C.User_ID = 120003) 
+Group by P.Name;
+
+
+장바구니 총가격 --------------------------------
+SELECT Sum(result)
+FROM (SELECT P.Price*IO.Number_Buy as result
+      FROM Indi_Order as IO, Product as P 
+      WHERE IO.Product_ID = P.Product_ID 
+            AND IO.Cart_ID IN(
+                              Select C.Cart_ID 
+                              From Cart as C
+                              Where C.User_ID = 120003) 
+      Group by P.Name) result_table;
+---------------------------------------------------------
+
+
+
+
+
+
+
+
+Select *
+From Cart as SC
+Where SC.User_ID IN (Select Sub.User_ID_Following
+                      From Subscribe as Sub
+                      Where Sub.User_ID_Follow = 110021 and Sub.User_ID_Follow = SC.User_ID
+                     );
+
+
+select max(cnt)
+from Subscribe
+where cnt in (select count(*) as cnt 
+              from Subscribe
+               Group By User_ID_Following);
+
+
+
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+select * 
+from Cart,Subscribe,Indi_Order 
+Where Subscribe.User_ID_Follow=110025 and Cart.Cart_ID = Indi_Order.Cart_ID and Cart.User_ID = Subscribe.User_ID_Following and Subscribe.User_ID_Following in (select Subscribe.User_ID_Following
+                                                                                           from Subscribe
+                                                                                           where Subscribe.User_ID_Follow=110025 and Subscribe.User_ID_Following in (select User_ID_Following
+                                                                                                                                                                     from Subscribe 
+                                                                                                                                                                     Group by User_ID_Following
+                                                                                                                                                                     Having count(*) = (Select max(mycount)
+                                                                                                                                                                                       from (select count(*) as mycount
+                                                                                                                                                                                       from Subscribe
+                                                                                                                                                                                        Group By User_ID_Following) as result)));
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+
+select max(mycount)
+from(select count(*) as mycount
+     from Subscribe
+     group by User_ID_Following);
+
+select User_ID_Follow, User_ID_Following
+from Subscribe
+Group by User_ID_Following
+Having count(*) = (Select max(mycount)
+                   from (select count(*) as mycount
+                          from Subscribe
+                          Group By User_ID_Following) as result);
+
+
+
+공동구매 참가자 수ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+Select *, GO.Start_Time, count(*), GO.Goal
+From Group_Order as GO
+where GO.Product_ID = '%특정Product_ID' 
+Group By Group_Buying_ID;
+
+Select *, GO.Start_Time, count(*), GO.Goal
+From Group_Order as GO
+where GO.Product_ID = '203010' 
+Group By Group_Buying_ID;
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+Insert INTO Group_Order
+Values (2, 311111, 203010, 400049, 072015, 2);
+Insert INTO Group_Order
+Values (4, 311002, 203010, 400050, 072345, 1);
+Insert INTO Group_Order
+Values (2, 311200, 203010, 400051, 081025, 1);
+
+Delete From Group_Order
+Where Cart_ID = 311200 and Product_ID = 203010;
+
+
+특정 상품 리뷰 보이기ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+Select R.Title, R.Text, R.Score, R.Date_Write, R.Product_ID
+From Review as R, Payment as P
+Where R.Payment_ID = P.Payment_ID and R.Product_ID = '%특정Product_ID';
+
+Select R.Title, R.Text, R.Score, R.Date_Write, R.Product_ID
+From Review as R, Payment as P
+Where R.Payment_ID = P.Payment_ID and R.Product_ID = '202000';
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+
+Select Sub.User_ID_Following as UID , count(*)
+From Subscribe as Sub
+Group by UID;
+
+110701		301394
+110702
+
+Insert INTO Indi_Order
+Values (4, 216001, 301394);
+Insert INTO Subscribe
+Values (110025, 110702);
+
